@@ -1,0 +1,49 @@
+.schedule {
+   padding: 20px;
+}
+.schedule__month {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   background: #3b3b3b;
+   color: #fff;
+   gap: 40px;
+   padding: 30px;
+   font-size: 40px;
+}
+.schedule__month-arrow {
+   font-size: 40px;
+   width: 80px;
+   height: 80px;
+   border-radius: 50%;
+   cursor: pointer;
+   background: #4e4e4e;
+   color: #fff;
+   border: none;
+}
+.schedule__days {
+   display: grid;
+   grid-template-columns: repeat(7, 1fr);
+   text-align: center;
+}
+
+.schedule__nums {
+   display: grid;
+   grid-template-columns: repeat(7, 1fr);
+   text-align: center;
+}
+.schedule__nums-item {
+   padding: 30px;
+   border: 1px solid #000;
+   font-size: 30px;
+
+   /* border: 2px solid #0075e2; */
+}
+.active {
+   background-color: #0075e2;
+   color: #fff;
+}
+
+.clicked {
+   border: 3px solid crimson;
+}
