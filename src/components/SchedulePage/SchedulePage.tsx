@@ -61,11 +61,14 @@ export default function SchedulePage() {
     setCurrCard(item);
     console.log("drag", item);
   }
-  function dragEndHandler(e: React.DragEvent) {}
-  function dragOverHandler(e: React.DragEvent) {
-    e.preventDefault();
+  function dragEndHandler(e: React.DragEvent | any) {
+    e.target.style.background = "white";
   }
-  function dropHandler(e: React.DragEvent, item: IDaysArr) {
+  function dragOverHandler(e: React.DragEvent | any) {
+    e.preventDefault();
+    e.target.style.background = "lightgray";
+  }
+  function dropHandler(e: React.DragEvent | any, item: IDaysArr) {
     e.preventDefault();
     let copy: IDaysArr[] = array.map((c) => {
       if (c.day === item.day) {
@@ -77,11 +80,10 @@ export default function SchedulePage() {
       return c;
     });
     setArray(copy);
+    e.target.style.background = "white";
+
     console.log("drop", item);
   }
-
-  //   const sortedArray = array.sort((a, b) => a.day - b.day);
-  //   console.log(sortedArray);
 
   return (
     <div className="schedule">
