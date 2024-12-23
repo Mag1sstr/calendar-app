@@ -29,11 +29,11 @@ export default function SchedulePage() {
   //  let getMonth = curr.getMonth()
   //  let startDate = new Date(getYear, getMonth, 1)
 
-  function getWeekDay(date: Date) {
-    let days = ["ВС", "ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ"];
+  // function getWeekDay(date: Date) {
+  //   let days = ["ВС", "ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ"];
 
-    return days[date.getDay()];
-  }
+  //   return days[date.getDay()];
+  // }
 
   let [array, setArray] = useState<IDaysArr[]>([]);
   useEffect(() => {
@@ -57,30 +57,49 @@ export default function SchedulePage() {
   }
 
   const [currCard, setCurrCard] = useState<IDaysArr | null>(null);
-  function dragStartHandler(e: React.DragEvent, item: IDaysArr) {
+  function dragStartHandler(item: IDaysArr) {
     setCurrCard(item);
     console.log("drag", item);
   }
   function dragEndHandler(e: React.DragEvent | any) {
-    e.target.style.background = "white";
+    if (!e.target.classList.contains("active")) {
+      e.target.style.background = "white";
+    } else {
+      null;
+    }
   }
-  function dragOverHandler(e: React.DragEvent | any) {
+  function dragOverHandler(e: React.DragEvent | any, item: IDaysArr) {
     e.preventDefault();
-    e.target.style.background = "lightgray";
+
+    if (
+      !e.target.classList.contains("active") &&
+      curr.getTime() < new Date(currentYear, currentMonth, item.day).getTime()
+    ) {
+      e.target.style.background = "lightgray";
+    } else {
+      null;
+    }
   }
   function dropHandler(e: React.DragEvent | any, item: IDaysArr) {
     e.preventDefault();
-    let copy: IDaysArr[] = array.map((c) => {
-      if (c.day === item.day) {
-        return { ...c, title: currCard?.title };
-      }
-      if (c.day === currCard?.day) {
-        return { ...c, title: item.title };
-      }
-      return c;
-    });
-    setArray(copy);
-    e.target.style.background = "white";
+    if (
+      !e.target.classList.contains("active") &&
+      curr.getTime() < new Date(currentYear, currentMonth, item.day).getTime()
+    ) {
+      let copy: any = array.map((c) => {
+        if (c.day === item.day) {
+          return { ...c, title: currCard?.title };
+        }
+        if (c.day === currCard?.day) {
+          return { ...c, title: item.title };
+        }
+        return c;
+      });
+      setArray(copy);
+      e.target.style.background = "white";
+    } else {
+      null;
+    }
 
     console.log("drop", item);
   }
@@ -99,7 +118,13 @@ export default function SchedulePage() {
           <div className="schedule__year">{currentYear}</div>
           <button
             onClick={() => {
-              currentMonth > 0 ? setCurrentMonth(currentMonth - 1) : null;
+              if (currentMonth > 0) {
+                setCurrentMonth(currentMonth - 1);
+              }
+              if (currentMonth == 0) {
+                setCurrentMonth(11);
+                setCurrentYear(currentYear - 1);
+              }
             }}
             className="schedule__month-arrow"
           >
@@ -142,10 +167,19 @@ export default function SchedulePage() {
               <div
                 key={i}
                 className={`schedule__nums-item ${
-                  curr.getDate() === i + 1 ? "active" : null
+                  curr.getDate() === i + 1 &&
+                  curr.getFullYear() === currentYear &&
+                  curr.getMonth() === currentMonth
+                    ? "active"
+                    : null
                 } ${item.title.length ? "clicked" : null}`}
                 onClick={() => {
-                  if (i + 1 < curr.getDate()) {
+                  if (
+                    // i + 1 < curr.getDate() &&
+                    // currentMonth - 1 < curr.getMonth()
+                    curr.getTime() >
+                    new Date(currentYear, currentMonth, i + 1).getTime()
+                  ) {
                     null;
                   } else {
                     let copy = [...array];
@@ -154,10 +188,10 @@ export default function SchedulePage() {
                     setClickModal(true);
                   }
                 }}
-                onDragStart={(e) => dragStartHandler(e, item)}
+                onDragStart={() => dragStartHandler(item)}
                 onDragLeave={(e) => dragEndHandler(e)}
                 onDragEnd={(e) => dragEndHandler(e)}
-                onDragOver={(e) => dragOverHandler(e)}
+                onDragOver={(e) => dragOverHandler(e, item)}
                 onDrop={(e) => dropHandler(e, item)}
                 draggable={true}
               >
