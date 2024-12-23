@@ -1,16 +1,16 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom"
-import SchedulePage from "./components/SchedulePage/SchedulePage"
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import SchedulePage from "./components/SchedulePage/SchedulePage";
 
 function App() {
-   return (
-      <>
-         <BrowserRouter>
-            <Routes>
-               <Route path="/schedule" element={<SchedulePage />} />
-            </Routes>
-         </BrowserRouter>
-      </>
-   )
+  return (
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<SchedulePage />} />
+        </Routes>
+      </BrowserRouter>
+    </>
+  );
 }
 
-export default App
+export default App;
