@@ -23,7 +23,7 @@ export default function SchedulePage() {
   let [currentMonth, setCurrentMonth] = useState(Number(curr.getMonth()));
   const [clickModal, setClickModal] = useState(false);
   const [clickIndex, setClickIndex] = useState<number>(-1);
-  let date = new Date(curr.getFullYear(), currentMonth + 1, 0);
+  let date = new Date(currentYear, currentMonth + 1, 0);
 
   //  let getYear = curr.getFullYear()
   //  let getMonth = curr.getMonth()
