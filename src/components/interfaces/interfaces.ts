@@ -1,4 +1,10 @@
 export interface IDaysArr {
-  title: string;
-  day: number;
+   title: string
+   day: number
+}
+
+export interface IEvents {
+   year: number
+   month: string
+   eventsArray: []
 }
