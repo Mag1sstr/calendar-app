@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import "./SchedulePage.css";
 import Modal from "../Modal/Modal";
 import { IDaysArr } from "../interfaces/interfaces";
+import { useAppDispatch, useAppSelector } from "../../store/store";
+import { setEvent } from "../../store/slices/calendarSlice";
 
 export default function SchedulePage() {
   const monthNames = [
@@ -24,6 +26,9 @@ export default function SchedulePage() {
   const [clickModal, setClickModal] = useState(false);
   const [clickIndex, setClickIndex] = useState<number>(-1);
   let date = new Date(currentYear, currentMonth + 1, 0);
+
+  const events = useAppSelector((state) => state.calendar.events);
+  const dispatch = useAppDispatch();
 
   //  let getYear = curr.getFullYear()
   //  let getMonth = curr.getMonth()
@@ -59,7 +64,23 @@ export default function SchedulePage() {
   const [currCard, setCurrCard] = useState<IDaysArr | null>(null);
   function dragStartHandler(item: IDaysArr) {
     setCurrCard(item);
-    console.log("drag", item);
+
+    if (item.title) {
+      const copy = [...array];
+      copy[item.day - 1] = {
+        title: "",
+        day: item.day,
+      };
+      // setArray(copy);
+      dispatch(
+        setEvent({
+          year: currentYear,
+          month: monthNames[currentMonth],
+          eventsArray: copy,
+        })
+      );
+    }
+    //  console.log("drag", item.title);
   }
   function dragEndHandler(e: React.DragEvent | any) {
     if (!e.target.classList.contains("active")) {
@@ -96,6 +117,13 @@ export default function SchedulePage() {
         return c;
       });
       setArray(copy);
+      dispatch(
+        setEvent({
+          year: currentYear,
+          month: monthNames[currentMonth],
+          eventsArray: copy,
+        })
+      );
       e.target.style.background = "white";
     } else {
       null;
@@ -103,6 +131,65 @@ export default function SchedulePage() {
 
     console.log("drop", item);
   }
+
+  useEffect(() => {
+    events.forEach((item) => {
+      if (
+        item.year === currentYear &&
+        item.month === monthNames[currentMonth]
+      ) {
+        setArray(item.eventsArray);
+      }
+    });
+  }, [currentMonth]);
+
+  let [timeId, setTimeId] = useState<any>(null);
+  useEffect(() => {
+    setTimeId(null);
+  }, [currentMonth]);
+  function previosMonthDrag(e: React.DragEvent) {
+    e.preventDefault();
+    if (!timeId) {
+      setTimeId(
+        setTimeout(() => {
+          if (currentMonth > 0) {
+            setCurrentMonth(currentMonth - 1);
+          }
+          if (currentMonth == 0) {
+            setCurrentMonth(11);
+            setCurrentYear(currentYear - 1);
+          }
+        }, 3000)
+      );
+    } else {
+      null;
+    }
+  }
+  function nextMonthDrag(e: React.DragEvent) {
+    e.preventDefault();
+    if (!timeId) {
+      setTimeId(
+        setTimeout(() => {
+          if (currentMonth > 10) {
+            setCurrentYear(currentYear + 1);
+            setCurrentMonth(0);
+          } else {
+            setCurrentMonth(currentMonth + 1);
+          }
+        }, 3000)
+      );
+    } else {
+      null;
+    }
+  }
+  //  console.log(timeId)
+
+  function clearTime() {
+    clearTimeout(timeId);
+    setTimeId(null);
+  }
+
+  console.log(events);
 
   return (
     <div className="schedule">
@@ -112,11 +199,16 @@ export default function SchedulePage() {
         daysArr={array}
         clickIndex={clickIndex}
         setArray={setArray}
+        currentMonth={monthNames[currentMonth]}
+        currentYear={currentYear}
       />
       <div className="schedule__inner">
         <div className="schedule__month">
           <div className="schedule__year">{currentYear}</div>
           <button
+            onDragOver={(e) => previosMonthDrag(e)}
+            onDragLeave={() => clearTime()}
+            onDragEnd={() => clearTime()}
             onClick={() => {
               if (currentMonth > 0) {
                 setCurrentMonth(currentMonth - 1);
@@ -133,6 +225,9 @@ export default function SchedulePage() {
 
           {monthNames[currentMonth]}
           <button
+            onDragOver={(e) => nextMonthDrag(e)}
+            onDragLeave={() => clearTime()}
+            onDragEnd={() => clearTime()}
             onClick={() => {
               if (currentMonth > 10) {
                 setCurrentYear(currentYear + 1);
