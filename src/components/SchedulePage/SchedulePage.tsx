@@ -271,13 +271,11 @@ export default function SchedulePage() {
                 } ${item.title.length ? "clicked" : null}`}
                 onClick={() => {
                   if (
-                    // i + 1 < curr.getDate() &&
-                    // currentMonth - 1 < curr.getMonth()
-                    curr.getTime() >
-                    new Date(currentYear, currentMonth, i + 1).getTime()
+                    !(
+                      curr.getTime() >
+                      new Date(currentYear, currentMonth, i + 1).getTime()
+                    )
                   ) {
-                    null;
-                  } else {
                     let copy = [...array];
                     setArray(copy);
                     setClickIndex(i);
