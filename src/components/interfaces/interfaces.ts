@@ -6,5 +6,5 @@ export interface IDaysArr {
 export interface IEvents {
   year: number;
   month: string;
-  eventsArray: [];
+  eventsArray: IDaysArr[];
 }
