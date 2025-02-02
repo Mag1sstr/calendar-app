@@ -21,9 +21,9 @@ export default function SchedulePage() {
     "Декабрь",
   ];
   let curr = new Date();
-  const [currentYear, setCurrentYear] = useState(curr.getFullYear());
+  const [currentYear, setCurrentYear] = useState<number>(curr.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(Number(curr.getMonth()));
-  const [clickModal, setClickModal] = useState(false);
+  const [clickModal, setClickModal] = useState<boolean>(false);
   const [clickIndex, setClickIndex] = useState<number>(-1);
   let date = new Date(currentYear, currentMonth + 1, 0);
 
@@ -40,7 +40,7 @@ export default function SchedulePage() {
   //   return days[date.getDay()];
   // }
 
-  let [array, setArray] = useState<IDaysArr[]>([]);
+  const [array, setArray] = useState<IDaysArr[]>([]);
   useEffect(() => {
     let daysArr: IDaysArr[] | undefined = [];
     for (let i: number = 0; i < date.getDate(); i++) {
