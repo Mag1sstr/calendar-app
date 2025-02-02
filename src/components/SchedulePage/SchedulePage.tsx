@@ -21,8 +21,8 @@ export default function SchedulePage() {
     "Декабрь",
   ];
   let curr = new Date();
-  let [currentYear, setCurrentYear] = useState(curr.getFullYear());
-  let [currentMonth, setCurrentMonth] = useState(Number(curr.getMonth()));
+  const [currentYear, setCurrentYear] = useState(curr.getFullYear());
+  const [currentMonth, setCurrentMonth] = useState(Number(curr.getMonth()));
   const [clickModal, setClickModal] = useState(false);
   const [clickIndex, setClickIndex] = useState<number>(-1);
   let date = new Date(currentYear, currentMonth + 1, 0);
@@ -111,7 +111,7 @@ export default function SchedulePage() {
       !e.currentTarget.classList.contains("active") &&
       curr.getTime() < new Date(currentYear, currentMonth, item.day).getTime()
     ) {
-      let copy: any = array.map((c) => {
+      let copy: IDaysArr[] = array.map((c) => {
         if (c.day === item.day) {
           return { ...c, title: currCard?.title };
         }
@@ -145,9 +145,7 @@ export default function SchedulePage() {
     });
   }, [currentMonth]);
 
-  let [timeId, setTimeId] = useState<ReturnType<typeof setTimeout> | null>(
-    null
-  );
+  let [timeId, setTimeId] = useState<number | null>(null);
 
   useEffect(() => {
     setTimeId(null);
@@ -268,7 +266,7 @@ export default function SchedulePage() {
                   curr.getMonth() === currentMonth
                     ? "active"
                     : null
-                } ${item.title.length ? "clicked" : null}`}
+                } ${item.title?.length ? "clicked" : null}`}
                 onClick={() => {
                   if (
                     !(

@@ -1,10 +1,10 @@
 export interface IDaysArr {
-   title: string
-   day: number
+  title: string | undefined;
+  day: number;
 }
 
 export interface IEvents {
-   year: number
-   month: string
-   eventsArray: []
+  year: number;
+  month: string;
+  eventsArray: [];
 }
