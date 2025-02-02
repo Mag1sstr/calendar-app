@@ -82,29 +82,33 @@ export default function SchedulePage() {
     }
     //  console.log("drag", item.title);
   }
-  function dragEndHandler(e: React.DragEvent | any) {
-    if (!e.target.classList.contains("active")) {
-      e.target.style.background = "white";
-    } else {
-      null;
+
+  // interface IEvent {
+  //   e: {
+  //     target: {
+  //       classList: DOMTokenList;
+  //     };
+  //   };
+  // }
+  function dragEndHandler(e: React.DragEvent) {
+    if (!e.currentTarget.classList.contains("active")) {
+      (e.target as HTMLElement).style.background = "white";
     }
   }
-  function dragOverHandler(e: React.DragEvent | any, item: IDaysArr) {
+  function dragOverHandler(e: React.DragEvent, item: IDaysArr) {
     e.preventDefault();
 
     if (
-      !e.target.classList.contains("active") &&
+      !e.currentTarget.classList.contains("active") &&
       curr.getTime() < new Date(currentYear, currentMonth, item.day).getTime()
     ) {
-      e.target.style.background = "lightgray";
-    } else {
-      null;
+      (e.target as HTMLElement).style.background = "lightgray";
     }
   }
-  function dropHandler(e: React.DragEvent | any, item: IDaysArr) {
+  function dropHandler(e: React.DragEvent, item: IDaysArr) {
     e.preventDefault();
     if (
-      !e.target.classList.contains("active") &&
+      !e.currentTarget.classList.contains("active") &&
       curr.getTime() < new Date(currentYear, currentMonth, item.day).getTime()
     ) {
       let copy: any = array.map((c) => {
@@ -124,9 +128,7 @@ export default function SchedulePage() {
           eventsArray: copy,
         })
       );
-      e.target.style.background = "white";
-    } else {
-      null;
+      (e.target as HTMLElement).style.background = "white";
     }
 
     console.log("drop", item);
@@ -143,7 +145,10 @@ export default function SchedulePage() {
     });
   }, [currentMonth]);
 
-  let [timeId, setTimeId] = useState<any>(null);
+  let [timeId, setTimeId] = useState<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+
   useEffect(() => {
     setTimeId(null);
   }, [currentMonth]);
@@ -161,8 +166,6 @@ export default function SchedulePage() {
           }
         }, 3000)
       );
-    } else {
-      null;
     }
   }
   function nextMonthDrag(e: React.DragEvent) {
@@ -178,18 +181,16 @@ export default function SchedulePage() {
           }
         }, 3000)
       );
-    } else {
-      null;
     }
   }
   //  console.log(timeId)
 
   function clearTime() {
-    clearTimeout(timeId);
+    clearTimeout(timeId!);
     setTimeId(null);
   }
 
-  console.log(events);
+  // console.log(events);
 
   return (
     <div className="schedule">
