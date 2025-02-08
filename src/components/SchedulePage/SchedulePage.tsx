@@ -20,12 +20,12 @@ export default function SchedulePage() {
     "Ноябрь",
     "Декабрь",
   ];
-  let curr = new Date();
+  const curr = new Date();
   const [currentYear, setCurrentYear] = useState<number>(curr.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(Number(curr.getMonth()));
   const [clickModal, setClickModal] = useState<boolean>(false);
   const [clickIndex, setClickIndex] = useState<number>(-1);
-  let date = new Date(currentYear, currentMonth + 1, 0);
+  const date = new Date(currentYear, currentMonth + 1, 0);
 
   const events = useAppSelector((state) => state.calendar.events);
   const dispatch = useAppDispatch();
@@ -42,7 +42,7 @@ export default function SchedulePage() {
 
   const [array, setArray] = useState<IDaysArr[]>([]);
   useEffect(() => {
-    let daysArr: IDaysArr[] | undefined = [];
+    const daysArr: IDaysArr[] | undefined = [];
     for (let i: number = 0; i < date.getDate(); i++) {
       daysArr.push({ day: i + 1, title: "" });
     }
@@ -54,7 +54,7 @@ export default function SchedulePage() {
 
   const weekDays = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"];
   function getStartDayNum(date: Date) {
-    let arr = [0, 1, 2, 3, 4, 5, 6];
+    const arr = [0, 1, 2, 3, 4, 5, 6];
     if (date.getDay() === 0) {
       return 6;
     }
@@ -83,13 +83,6 @@ export default function SchedulePage() {
     //  console.log("drag", item.title);
   }
 
-  // interface IEvent {
-  //   e: {
-  //     target: {
-  //       classList: DOMTokenList;
-  //     };
-  //   };
-  // }
   function dragEndHandler(e: React.DragEvent) {
     if (!e.currentTarget.classList.contains("active")) {
       (e.target as HTMLElement).style.background = "white";
@@ -111,7 +104,7 @@ export default function SchedulePage() {
       !e.currentTarget.classList.contains("active") &&
       curr.getTime() < new Date(currentYear, currentMonth, item.day).getTime()
     ) {
-      let copy: IDaysArr[] = array.map((c) => {
+      const copy: IDaysArr[] = array.map((c) => {
         if (c.day === item.day) {
           return { ...c, title: currCard?.title };
         }
@@ -145,7 +138,7 @@ export default function SchedulePage() {
     });
   }, [currentMonth]);
 
-  let [timeId, setTimeId] = useState<number | null>(null);
+  const [timeId, setTimeId] = useState<number | null>(null);
 
   useEffect(() => {
     setTimeId(null);
@@ -274,7 +267,7 @@ export default function SchedulePage() {
                       new Date(currentYear, currentMonth, i + 1).getTime()
                     )
                   ) {
-                    let copy = [...array];
+                    const copy = [...array];
                     setArray(copy);
                     setClickIndex(i);
                     setClickModal(true);
